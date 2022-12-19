@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "188872008372",
+    "project_id": "shahbasket-310ce",
+    "storage_bucket": "shahbasket-310ce.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:188872008372:android:4fdcd5482cccda23fc6de1",
+        "android_client_info": {
+          "package_name": "com.shahbasket"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "188872008372-tb8ajqd16c9fvn771qvq9j4bm1dt3fgn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.shahbasket",
+            "certificate_hash": "d78c68ea2f7928db104c6cab14d44f44d7e3f47b"
+          }
+        },
+        {
+          "client_id": "188872008372-6a56tabugs87bn00utcrlu9oid778p85.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDs8KXZBoalK8WgpE8-Ss--OLStzykxB04"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "188872008372-6a56tabugs87bn00utcrlu9oid778p85.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

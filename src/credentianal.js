@@ -1,0 +1,5 @@
+export const API_BASE="https://user.dev.1verse.live"
+export const OBAdvisorToken="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjZCI6IjIwMjItMTItMDIgMTA6NTg6NTguNzQ3OTQzIiwidWlkIjp7InBob25lX251bWJlciI6MTEwMDAwMDAwMywidXNlcl9jbGFzcyI6Ik9CQWR2aXNvciIsImlkIjoiNjM4NzIyZmI5N2I2ZTUzNzZkMzEzZTQwIn19.hW7E5JiOD4fANefBR0aG9bumy1OdSo8li6r14yUjuIc"
+export const OVCustomerToken="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjZCI6IjIwMjItMTItMDIgMTA6NTg6NTguNzk0OTk2IiwidWlkIjp7InBob25lX251bWJlciI6MTAwMDAwMDAwMCwidXNlcl9jbGFzcyI6Ik9WQ3VzdG9tZXIiLCJpZCI6IjYzODcyMjY0OTdiNmU1Mzc2ZDMxMDM5ZiJ9fQ.OdQz61ECd0NUbCWB6ZQQ78M8RxrbSW717ID3tfxFVGs"
+export const WABOTToken="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjZCI6IjIwMjItMTItMDIgMTA6NTg6NTguNzk1MjI5IiwidWlkIjoiVGNOWlVXSTFkR1N3c1l0MFI2In0.fH76bBKOLp1vt_ogLmPgnnwE0fO9XwBZzS5dLlZsiq8"
+export const Email=/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
