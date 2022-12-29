@@ -20,10 +20,12 @@ import store from "../../redux/store";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import CommonStyle from "../../components/commonAppStyle"
 import { apiPost, setItem } from "../../API/APIhelper";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import LoadingLoader from "../../components/LoadingLoader";
 import auth from '@react-native-firebase/auth';
-import { addTheUserKey } from "../../redux/actions/main";
+import { addTheUserKey, getTheUserDetails } from "../../redux/actions/main";
+import { createtheuser, findtheUser } from "../../API/urls";
+import types from "../../redux/types";
 
 
 
@@ -31,17 +33,14 @@ import { addTheUserKey } from "../../redux/actions/main";
 
 
 
-const PhoneAuth = ({ navigation,route }) => {
-  const screenName=route?.params?.mobileNumber
+const PhoneAuth = ({ navigation }) => {
   const {LangData,UserData}=useSelector((state)=>state.lang)
   const [confirm, setConfirm] = useState(null);
-  const [currentphonenum, setCurrentPhonenumber] = useState();
   const [showme, Setshowme] = useState(true);
   const [code, setCode] = useState("");
   const [number, setNumber] = useState("");
   const [counter, setCounter] = useState(59);
-  const [loadingText, setloadingText] = useState(LangData?.switch_lan)
-  
+  const dispatch=useDispatch()
 
 
   useEffect(() => {
@@ -49,28 +48,13 @@ const PhoneAuth = ({ navigation,route }) => {
       Setshowme(false);
     }, 1000);
   }, []);
+
+ 
+  
  
 
-  //reinitlilization 
-  useEffect(() => {
-    if(screenName)
-    {
-      setConfirm("ramu")
-      Setshowme(true)
-      signInWithPhoneNumber(screenName)
-      
-      
 
-    }
-    else{
-      setConfirm(null)
-      setNumber("")
-      setCode("")
-      setCounter(59)
-    }
-  
-    
-  }, [])
+ 
   
   
 
@@ -80,39 +64,70 @@ const PhoneAuth = ({ navigation,route }) => {
     return () => clearInterval(timer);
   }, [counter]);
 
-  useEffect(() => {
-    auth().onAuthStateChanged((user) => {
-      if (user) {
-        console.log(user)
-          logOutFirebase();
+  const postOTPstep=async(user)=>{
+      try {
+       
+
+        Setshowme(true)
+        await findtheUser(user.uid).then((res)=>{
+          dispatch({
+            type:types.USER_DATA,
+            payload:res.data.attributes
+          })
+          handleNavigations(res.data.attributes)
+        }).catch((err)=>{
+          console.log("error while get",err)
+
+          const data={
+            UserId:user.uid,
+            MobileNumber:user.phoneNumber
+          }
+          createtheuser({data}).then((res)=>{            
+            dispatch({
+              type:types.USER_DATA,
+              payload:res.data.attributes
+            })  
+            handleNavigations(res.data.attributes)         
+          
+            
+          }).catch((err)=>console.log("me post vala hu ",err))
+
+        })
+      } catch (error) {
+        console.log("me outer valaa hu ",error)
+        
       }
-      else console.log(user)
-  });
+        
 
-  }, [])
+  }
 
-  logOutFirebase = () => {
-    auth().signOut();
-}
+  async function handleNavigations (res)
+  {
+     
+      console.log(res)
+      await setItem("UserDetails",res)
+      if(!res?.Name) navigation.navigate("NameScreen")
+      else if(!res?.Address) navigation.navigate("Address")
+      else navigation.navigate("App")
+  }
+
+
+
+ 
+
   
 
  
   const signInWithPhoneNumber = async (phoneNumber) => {
-      setNumber(phoneNumber);
-      setloadingText("")
+      setNumber(phoneNumber);   
       Setshowme(true)   
     
       if (phoneNumber.length >= 10) {
-        const data={
-            user_class: "OVCustomer",
-            phone_number: phoneNumber,
-        }
+       
        try {
         const confirmation = await auth().signInWithPhoneNumber("+91"+phoneNumber);
         setConfirm(confirmation)
-        console.log(confirmation)
         Setshowme(false)
-        //setConfirm(res);
         setCounter(60);
         
        } catch (error) {
@@ -133,18 +148,23 @@ const PhoneAuth = ({ navigation,route }) => {
   const confirmCode = async () => {
     try {
 
-      const valu=confirm.confirm(code)
-      console.log(valu)
+      const user = await confirm.confirm(code)
+      postOTPstep(user.user)
+     
       
     } catch (error) {
-      console.log(error)
+      console.log(error.message)
+      switch (error.code) {
+        case "auth/invalid-verification-code": ToastAndroid.show("Invalid OTP ",ToastAndroid.SHORT)
+        
+      }
       
     } 
             
     
   };
 
-  if(showme) return <LoadingLoader LoadingText={loadingText} />
+  if(showme) return <LoadingLoader />
 
   if (!confirm) {
     return (
@@ -311,13 +331,6 @@ const PhoneAuth = ({ navigation,route }) => {
               style={styles.backcontainer}
               onPress={() => { setConfirm(false); setNumber("") }}
             >
-              {/* <Ionicons
-                name="md-arrow-back"
-                style={styles.iconstyle}
-                size={30}
-                color="#6B7280"
-                onPress={() => navigation.navigate("Language")}
-              /> */}
               <Image
                 // color="#6B7280"
                 onPress={() => navigation.navigate("Language")}
@@ -338,8 +351,7 @@ const PhoneAuth = ({ navigation,route }) => {
                   textInputStyle={styles.roundedTextInput}
                   handleTextChange={(text) => setCode(text)}
                   inputCount={6}
-                  autoCapitalize={true}
-                  keyboardType="alphanumeric"
+                  keyboardType="numeric"
                   backgroundColor="#F9FAFB"
                   borderColor="#B6BAC3"
                   borderWidth={2}

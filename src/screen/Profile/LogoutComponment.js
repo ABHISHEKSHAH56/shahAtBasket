@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { FontFamily } from '../../constants/theme';
 import { moderateScale, scale, verticalScale } from '../../constants/scaling';
 import { CommonActions, useNavigation } from '@react-navigation/native';
+import auth from '@react-native-firebase/auth';
 
 export default function LogoutComponment({setModalVisible,modalVisible}) {
     const {LangData}=useSelector((state)=>state.lang)  
@@ -89,8 +90,9 @@ export default function LogoutComponment({setModalVisible,modalVisible}) {
                 }}
                 onPress={async () => {
                   setModalVisible(false);
-                  await removeItem("token");
-                  await removeItem("phonenumber");
+                  auth().signOut();
+                  removeItem("UserDetails")
+                
                   navigation.dispatch(
                     CommonActions.reset({
                       index: 0,

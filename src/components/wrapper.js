@@ -1,7 +1,7 @@
 import {View, Text, Image, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {scale, verticalScale} from '../constants/scaling';
-import {images} from '../constants';
+import {COLORS, images} from '../constants';
 
 export default function Wrapper({
     navigation,
@@ -19,8 +19,8 @@ export default function Wrapper({
     <View
       style={{
         flex: 1,
-        backgroundColor: '#ffff',
-        paddingHorizontal: scale(20),
+        backgroundColor: "#fff",
+        paddingHorizontal: scale(10),
       }}>
       <View
         style={{

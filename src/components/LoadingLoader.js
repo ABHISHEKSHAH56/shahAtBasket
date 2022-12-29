@@ -8,7 +8,7 @@ export default function LoadingLoader({LoadingText}) {
   return (
     <View style={styles.conatainer}>
         <View style={{}}>
-          <Lottie source={images.LoaderImg} style={{height: verticalScale(400),width:moderateScale(40)}} autoPlay loop />
+          <Lottie renderMode='cover' source={images.LoaderImg} style={{height: verticalScale(1800),width:moderateScale(40)}} autoPlay loop />
         </View>
         <View style={{marginTop: verticalScale(280)}}>
           <Text style={{fontFamily:FontFamily.Regular,color:"#111827",fontSize: scale(16), fontWeight:"500"}}>{LoadingText}</Text>

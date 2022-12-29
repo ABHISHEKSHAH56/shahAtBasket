@@ -52,10 +52,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     borderColor: "#D3D8DF",
-    height: 40,
+    height: 60,
     opacity:0.9,
 
     backgroundColor: "white",
+    marginVertical:scale(20)
   },
   placeholderStyle: {
     fontFamily: "Inter",

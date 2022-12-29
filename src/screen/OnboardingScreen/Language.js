@@ -13,9 +13,9 @@ import Line from '../../components/Line';
 import {images} from '../../constants';
 
 const Language = ({route, navigation}) => {
-  const screenName = route.params?.screen;
+  const isBack = route.params?.isBack;
   const [value, setValue] = React.useState('en');
-  const {LangData, LangError} = useSelector(state => state.lang);
+  const {LangError} = useSelector(state => state.lang);
 
   useEffect(() => {
     const item = async () => {
@@ -33,14 +33,14 @@ const Language = ({route, navigation}) => {
       ToastAndroid.show(LangError, ToastAndroid.SHORT);
       console.log(LangError);
     } else {
-      if (screenName) {
+      if (isBack) {
         ToastAndroid.show(
           `App language has been changed to ${
-            value == 'ka' ? 'Kanada' : 'English'
+            value == 'hi' ? 'Hindi' : 'English'
           }`,
           ToastAndroid.SHORT,
         );
-        navigation.navigate('App', {screen: 'Profile'});
+        navigation.navigate('App', {isBack: 'Profile'});
       } else {
         navigation.navigate('PhoneAuthScreen');
       }
@@ -60,7 +60,7 @@ const Language = ({route, navigation}) => {
         <View style={styles.heading2}>
           <Text style={styles.textHeading2}>
             {' '}
-            {value == 'kn-IN' ? 'App की भाषा चुने !' : 'Choose app language'}
+            {value == 'hi' ? 'App की भाषा चुने ' : 'Choose app language'}
           </Text>
         </View>
         <View style={styles.inputContainer2}>
@@ -83,7 +83,7 @@ const Language = ({route, navigation}) => {
               <RadioButton.Item
                 color={'#7A42F4'}
                 label="हिंदी"
-                value="kn-IN"
+                value="hi"
                 style={styles.radio}
               />
               <Text style={styles.subtitle}>Hindi</Text>
@@ -98,11 +98,11 @@ const Language = ({route, navigation}) => {
           <Button
             Press={handleFlow}
             buttonText={
-              screenName
-                ? value == 'kn-IN'
-                  ? 'ಬದಲಾವಣೆಗಳನ್ನು ಉಳಿಸು'
+              isBack
+                ? value == 'hi'
+                  ? 'परिवर्तनों को सुरक्षित करें'
                   : 'Save Changes'
-                : value == 'kn-IN'
+                : value == 'hi'
                 ? 'जारी रखें'
                 : 'Continue'
             }

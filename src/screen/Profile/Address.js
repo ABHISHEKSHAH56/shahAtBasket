@@ -10,14 +10,19 @@ import {
   Image,
   ScrollViewComponent,
   ScrollView,
+  ToastAndroid,
 } from 'react-native';
-import {useSelector} from 'react-redux';
-import {getItem} from '../../API/APIhelper';
+import {useDispatch, useSelector} from 'react-redux';
+import {getItem, setItem} from '../../API/APIhelper';
 import Button from '../../components/Button';
 import Wrapper from '../../components/wrapper';
 import {images, SIZES} from '../../constants';
 import {scale, verticalScale} from '../../constants/scaling';
 import {FontFamily} from '../../constants/theme';
+import { addTheUserKey } from '../../redux/actions/main';
+import LoadingLoader from '../../components/LoadingLoader';
+import { updatetheUSer } from '../../API/urls';
+import types from '../../redux/types';
 
 function TextInputcontainer({title,editable,icons,keyboardType,value,onChange,maxLength,contentType,Errormsg}) {
   return (
@@ -101,13 +106,15 @@ function TextInputcontainer({title,editable,icons,keyboardType,value,onChange,ma
   );
 }
 
-const Addresss = ({navigation}) => {
-  const {LangData, LangError} = useSelector(state => state.lang);
+const Addresss = ({navigation,route}) => {
+  const isBack = route.params?.isBack;
+  const {LangData, UserData} = useSelector(state => state.lang);  
+  const [showloader, setshowloader] = useState(false)
   const [AddressInput, setAddressInput] = useState({
-    streetAddress:"",
-    city:"",
+    streetAddress:UserData?.Address?.streetAddress ?? "",
+    city:UserData?.Address?.city ?? "",
     state:"DELHI",
-    pincode:"",
+    pincode:UserData?.Address?.pincode ?? "",
     country:"India"
 
   })
@@ -116,6 +123,9 @@ const Addresss = ({navigation}) => {
     city:"",
     pincode:""
   })
+  const dispatch=useDispatch()
+ 
+  
 
   const checker=()=>{
     
@@ -142,10 +152,26 @@ const Addresss = ({navigation}) => {
 
   }
 
-  const handleFlow=()=>{
+  const handleFlow=async()=>{
     if(checker())
-    {
-      console.log("validated the address")
+    { setshowloader(true)
+      
+      await updatetheUSer({data:{Address:AddressInput}},UserData.UserId).then((res)=>{
+        dispatch({
+          type:types.USER_DATA,
+          payload:res.data.attributes
+        })
+        setItem("UserDetails",res.data.attributes)
+
+      })
+      console.log(UserData)
+      if(isBack)
+      {
+        ToastAndroid.show("Your address has updated! ",ToastAndroid.SHORT)
+        navigation.goBack()
+      }
+      else navigation.navigate("App")
+      setshowloader(false)
     }
 
   }
@@ -154,13 +180,11 @@ const Addresss = ({navigation}) => {
  
 
  
-
+  if(showloader) return <LoadingLoader />
   return (
     <ScrollView style={{backgroundColor:'#fff'}} showsVerticalScrollIndicator={false}>
     <Wrapper
-      isleft={true}
-      leftImg={images.Line}
-      leftPress={() => navigation.goBack()}>
+      >
       <View style={{flex: 0.8}}>
         <View style={styles.profilebodytable}>
           <Text style={{fontSize: 18, fontWeight: '600', color: '#000000'}}>            
@@ -170,7 +194,7 @@ const Addresss = ({navigation}) => {
 
         <TextInputcontainer
           title={"Street Address/ floor Number"}
-          icons={images.IFC}
+          icons={images.street}
           value={AddressInput.streetAddress}
           keyboardType="ascii-capable"
           maxLength={50}
@@ -181,7 +205,7 @@ const Addresss = ({navigation}) => {
           />
           <TextInputcontainer
           title={"Nearby place / city "}
-          icons={images.IFC}
+          icons={images.city}
           value={AddressInput.city}
           maxLength={50}
           keyboardType="ascii-capable"
@@ -192,7 +216,7 @@ const Addresss = ({navigation}) => {
           />
          <TextInputcontainer
           title={"State"}
-          icons={images.IFC}
+          icons={images.delhi}
           value={"DELHI"}
           keyboardType="ascii-capable"
           editable={true}
@@ -201,7 +225,7 @@ const Addresss = ({navigation}) => {
           />
           <TextInputcontainer
           title={"Pincode"}
-          icons={images.IFC}
+          icons={images.pincode}
           value={AddressInput.pincode}
           maxLength={6}
           keyboardType="numeric"
@@ -214,7 +238,7 @@ const Addresss = ({navigation}) => {
 
       <View style={{flex: 0.2, justifyContent: 'flex-start'}}>
         <Button          
-          buttonText={LangData.update}
+          buttonText={"Continue"}
           Press={handleFlow}
         />
       </View>

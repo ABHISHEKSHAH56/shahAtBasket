@@ -8,16 +8,21 @@ import {
   BackHandler,
   TextInput,
   Image,
+  ToastAndroid,
 } from 'react-native';
-import {useSelector} from 'react-redux';
-import {getItem} from '../../API/APIhelper';
+import {useDispatch, useSelector} from 'react-redux';
+import {getItem, setItem} from '../../API/APIhelper';
 import Button from '../../components/Button';
 import Wrapper from '../../components/wrapper';
 import {images, SIZES} from '../../constants';
 import {scale, verticalScale} from '../../constants/scaling';
 import {FontFamily} from '../../constants/theme';
+import { addTheUserKey } from '../../redux/actions/main';
+import LoadingLoader from '../../components/LoadingLoader';
+import { updatetheUSer } from '../../API/urls';
+import types from '../../redux/types';
 
-function TextInputcontainer({title,icons,keyboardType,value,onChange,maxLength,contentType}) {
+function TextInputcontainer({title,icons,keyboardType,value,onChange,maxLength,contentType,Errormsg}) {
   return (
     <View style={styles.TextInputContainer}>
       <View style={styles.MobileContainer}>
@@ -69,24 +74,78 @@ function TextInputcontainer({title,icons,keyboardType,value,onChange,maxLength,c
             />
           </View>
         </View>
+        <Text style={{color: "red",marginVertical:verticalScale(60)}}>
+          {Errormsg}
+      </Text>
       </View>
     </View>
   );
 }
 
-const NameEmail = ({navigation}) => {
-  const {LangData, LangError} = useSelector(state => state.lang);
- const [Name, setName] = useState("")
- const [email, setemail] = useState("")
+const NameEmail = ({navigation,route}) => {
+  const isBack = route.params?.isBack;
+  const {LangData, UserData} = useSelector(state => state.lang);
+ const [Name, setName] = useState(UserData?.Name ?? "")
+ const [email, setemail] = useState(UserData?.email ?? "")
+ const [msgerr, setmsgerr] = useState({
+  Name:"",
+  Email:""
+ })
+ const [showloader, setshowloader] = useState(false)
+ const dispatch=useDispatch()
+ console.log(UserData)
 
- const handleFlow=()=>{
+ const checker=()=>{
+  console.log("callllllllll")
+  setmsgerr({
+    Name:"",
+    Email:""
+
+  })
+    if(Name.length<3) {
+      setmsgerr({msgerr,Name:"Name can be less than 2  "})
+      return false;
+    }
+    if(!email.length) {
+      setmsgerr({msgerr,Email:"Email can't be empty   "})
+      return false
+    }
+    if(!email.match(Email)) {
+      setmsgerr({msgerr,Email:"email is invalid "})
+      return false
+    }
+   
+    return true 
+ }
+
+ const handleFlow=async()=>{
+      if(checker())
+      {
+        setshowloader(true)
+        await updatetheUSer({data:{Name:Name,email:email}},UserData.UserId).then((res)=>{
+          dispatch({
+            type:types.USER_DATA,
+            payload:res.data.attributes
+          })
+          setItem("UserDetails",res.data.attributes)
+          
+        }).catch((err)=>console.log(err.msg))
+        if(isBack)
+      {
+        ToastAndroid.show("Your profile Details  has updated! ",ToastAndroid.SHORT)
+        navigation.goBack()
+      }
+      else navigation.navigate("Address")
+      setshowloader(false)
+      }
+
     
  }
 
 
  
 
- 
+ if(showloader) return <LoadingLoader />
 
   return (
     <Wrapper>
@@ -105,24 +164,26 @@ const NameEmail = ({navigation}) => {
           maxLength={26}
           onChange={(x)=>setName(x)}
           contentType="name"
+          Errormsg={msgerr.Name}
+          
           
           />
          <TextInputcontainer
-          title={"Enter your email -(optional)"}
+          title={"Enter your email"}
           icons={images.email}
           value={email}
           keyboardType="email-pad"
           onChange={(x)=>setemail(x)}
           contentType="emailAddress"
+          Errormsg={msgerr.Email}
           
           />
       </View>
 
       <View style={{flex: 0.2, justifyContent: 'flex-start'}}>
         <Button
-          disable={Name.length >2 ? undefined :true}
           buttonText={"Continue"}
-          Press={Name.length >2?handleFlow:()=>{}}
+          Press={handleFlow}
         />
       </View>
     </Wrapper>

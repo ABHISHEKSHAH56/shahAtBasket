@@ -9,13 +9,13 @@ const {dispatch} = store;
 export async function getLan (data) {
     let trans={}
     console.log("Fetch the API & map ")
-    await callTranslationAPI({ client: "Campaigns-App",locale:data}).then(
+    await callTranslationAPI(data).then(
         (res)=>{
             const {data}=res
             console.log("Fetch the API & map ",res)
-            data.map((item)=> trans[item.string_code]=item.string_value  )
-            const item=JSON.stringify(trans)
-            setItem('LangData',item)
+            data.map((item)=> trans[item.attributes.string_code]=item.attributes.string_value  )
+            // const item=JSON.stringify(trans)
+            setItem('LangData',trans)
             dispatch({
                 type: types.LANGUAGE_UPDATE,
                 payload: trans
@@ -38,51 +38,25 @@ export async function getLan (data) {
 
 export async function getTheTranslatedPage (initialRoute) {
     const data=await getItem('LangData')
-    const result=JSON.parse(data)
     dispatch({
             type: types.LANGUAGE_UPDATE,
-            payload: result
+            payload: data
     }) 
     initialRoute()
-    console.log("every time app open tranlated code extracted from local ",result)
+    console.log("every time app open tranlated code extracted from local ",data)
     
 }
 
 
-export async function addTheUserKey (key,value) {
-    const data=await getItem('UserDetails')
-    if(data)
-    {
-        const result=JSON.parse(data)
-        result[key]=value
-        await setItem("UserDetails",JSON.stringify(result))
-        dispatch({
-            type:"UserData",
-            payload:result
-        })
-        return true;
 
-    }
-    const result={}
-    result[key]=value
-    await setItem("UserDetails",JSON.stringify(result))
-    dispatch({
-        type:"UserData",
-        payload:result
-    })
-    return true;
-    
-    
-}
 
 export async function getTheUserDetails () {
     const data=await getItem('UserDetails')
-    const result=JSON.parse(data)
     dispatch({
-            type: types.LANGUAGE_UPDATE,
-            payload: result
+            type: types.USER_DATA,
+            payload: data
     })
-    console.log("every time app open fetch the all user details  from local ",result)
+    console.log("every time app open fetch the all user details  from local ",data)
     
     
     

@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 import LogoutComponment from "./LogoutComponment";
 import Wrapper from "../../components/wrapper";
 import { images } from "../../constants";
+import { useIsFocused } from "@react-navigation/core";
 
 
 
@@ -21,22 +22,21 @@ import { images } from "../../constants";
 const { height, width } = Dimensions.get("window");
 
 const ProfileScreen = ({ navigation }) => {
-  const {LangData,LangError}=useSelector((state)=>state.lang)
-  const [modalVisible, setModalVisible] = useState(false);
+  const {LangData,UserData}=useSelector((state)=>state.lang)
   const [Language, setLanguage] = useState("");
-  const [PhoneNumber, setPhoneNumber] = useState();
-  const [VillageName, setVillageName] = useState("Cheeranahalli");
-  const [userName, setuserName] = useState("BAA0503");
+  const isFocused=useIsFocused()
+  
   useEffect(() => {
     getAllData();
-  }, []);
+    console.log(UserData)
+  }, [isFocused]);
   
 
   const getAllData = async () => {
-    const lang = await getItem("selectedlng");
-    const phone = await getItem("phonenumber");
-    setLanguage(lang == "ka" ? "Hindi" : "English");
-    setPhoneNumber(phone);
+    const lang = await getItem("selectedlng");   
+    setLanguage(lang == "hi" ? "Hindi" : "English");
+    console.log(lang,Language)
+    
   };
 
 
@@ -72,11 +72,11 @@ const ProfileScreen = ({ navigation }) => {
               justifyContent: "space-between",
             }}
           >
-            <Text style={{ ...styles.componentValueText }}>Abhishek Shah</Text>
+            <Text style={{ ...styles.componentValueText }}>{UserData?.Name}</Text>
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate("Onboarding", { screen:'NameScreen',params:{
-                  screen: 'screen E'
+                  isBack:true
                 } })
               }
             >
@@ -98,24 +98,11 @@ const ProfileScreen = ({ navigation }) => {
               ...styles.componentHeaderText,
             }}
           >
-          {LangData?.mobile_number}
+          Mobile Number
           </Text>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text style={{ ...styles.componentValueText }}>{PhoneNumber}</Text>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("ProfileEdit")}
-            >
-              <Text style={{ ...styles.componentValueSeconderyText }}>
-                {LangData?.edit}
-              </Text>
-            </TouchableOpacity>
-          </View>
+          
+          <Text style={{ ...styles.componentValueText }}>{UserData?.MobileNumber}</Text>
+            
         </View>
         
         <View style={styles.profilebodytable}>
@@ -139,12 +126,12 @@ const ProfileScreen = ({ navigation }) => {
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate("Onboarding", { screen:'LanguageScreen',params:{
-                  screen: 'screen E'
+                  isBack:true
                 } })
               }
             >
               <Text style={{ ...styles.componentValueSeconderyText }}>
-                {LangData?.change}
+              {LangData?.change.toUpperCase()}
               </Text>
             </TouchableOpacity>
           </View>
@@ -173,18 +160,19 @@ const ProfileScreen = ({ navigation }) => {
             }}
           >
             <View style={{flex:0.8}}>
-            <Text style={{ ...styles.componentValueText }} numberOfLines={4}>16/1301 E-Block Bapa Nagar Padam Singh Road Karol Bagh  jdnjdnd </Text>
+            <Text style={{ ...styles.componentValueText }} numberOfLines={4}>{`${UserData?.Address?.streetAddress}, ${UserData?.Address?.city}, ${ UserData?.Address?.state} - ${UserData?.Address?.pincode}`}
+             </Text>
             </View>
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate("Onboarding", { screen:'Address',params:{
-                  screen: 'screen E'
+                  isBack: true
                 } })
               }
               style={{flex:0.2,alignItems :'flex-end'}}
             >
               <Text style={{ ...styles.componentValueSeconderyText }}>
-                {LangData?.change}
+                {LangData?.change.toUpperCase()}
               </Text>
             </TouchableOpacity>
           </View>

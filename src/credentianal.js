@@ -1,5 +1,5 @@
-export const API_BASE="https://user.dev.1verse.live"
-export const OBAdvisorToken="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjZCI6IjIwMjItMTItMDIgMTA6NTg6NTguNzQ3OTQzIiwidWlkIjp7InBob25lX251bWJlciI6MTEwMDAwMDAwMywidXNlcl9jbGFzcyI6Ik9CQWR2aXNvciIsImlkIjoiNjM4NzIyZmI5N2I2ZTUzNzZkMzEzZTQwIn19.hW7E5JiOD4fANefBR0aG9bumy1OdSo8li6r14yUjuIc"
+export const API_BASE="https://plankton-app-4wdgx.ondigitalocean.app"
+export const STRAPIToken="84aa676610d0a535714c4bb0d0624a281356cac9e92719ed7fa2ec541c706aaa4fc4d735ce8b331321d58083eda198b02e839a5600746329dec3916e4d65797427f0ce1f9857cee067afa8f958a826eb4e779256fdb186aa16cac0a1420eb22db3d46ec16abf7687372d8d2fe738eaf7ec5d84a894746f8894b79129795c5661"
 export const OVCustomerToken="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjZCI6IjIwMjItMTItMDIgMTA6NTg6NTguNzk0OTk2IiwidWlkIjp7InBob25lX251bWJlciI6MTAwMDAwMDAwMCwidXNlcl9jbGFzcyI6Ik9WQ3VzdG9tZXIiLCJpZCI6IjYzODcyMjY0OTdiNmU1Mzc2ZDMxMDM5ZiJ9fQ.OdQz61ECd0NUbCWB6ZQQ78M8RxrbSW717ID3tfxFVGs"
 export const WABOTToken="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjZCI6IjIwMjItMTItMDIgMTA6NTg6NTguNzk1MjI5IiwidWlkIjoiVGNOWlVXSTFkR1N3c1l0MFI2In0.fH76bBKOLp1vt_ogLmPgnnwE0fO9XwBZzS5dLlZsiq8"
 export const Email=/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
